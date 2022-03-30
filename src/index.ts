@@ -39,10 +39,9 @@ console.log(task1);
 
 //Task2
 function sbtract (set1: Set<number>, set2: Set<number>): number[]{
-    const arr = [];
-    set1.forEach(e1=>set2.has(e1)||arr.push(e1));
-    set2.forEach(e2=>set1.has(e2)||arr.push(e2))
-    const res = Array.from(new Set<number>(arr));
+    const res = [];
+    set1.forEach(e1=>set2.has(e1)||res.push(e1));
+    set2.forEach(e2=>set1.has(e2)||res.push(e2))
 return res;
 }
 let task2 = sbtract(s1, s2);
