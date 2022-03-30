@@ -41,7 +41,6 @@ console.log(task1);
 function sbtract(set1, set2) {
     const res = [];
     set1.forEach(e1 => set2.has(e1) || res.push(e1));
-    set2.forEach(e2 => set1.has(e2) || res.push(e2));
     return res;
 }
 let task2 = sbtract(s1, s2);
