@@ -55,9 +55,8 @@ function getSortedOccurrences(array) {
             e1 == e2 && resMap.set(e1, ++count);
         });
     });
-    const result = Array.from(resMap);
     const res = [];
-    result.forEach(r => res.push({ str: r[0], count: r[1] }));
+    Array.from(resMap).forEach(r => res.push({ str: r[0], count: r[1] }));
     return _.orderBy(res, ["count", "str"], ["desc", "asc"]);
 }
 let task3 = getSortedOccurrences(arr3);
