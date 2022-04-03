@@ -89,7 +89,7 @@ class Canvas {
         return this._shapes.splice(index, 1)[0];
     }
     sort() {
-        this._shapes.sort((a, b) => (a.x - b.x) || (a.y - b.y));
+        this._shapes.sort((a, b) => (a.x - b.x) || (b.y - a.y));
     }
     removeIf(predicate) {
         this._shapes.forEach((s, i) => predicate(s) && this.removeShape(i));
