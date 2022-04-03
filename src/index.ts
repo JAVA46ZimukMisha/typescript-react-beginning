@@ -1,67 +1,117 @@
-import * as _ from "lodash";
+interface Shape {
+    draw(): void;
+}
+class Point implements Shape {
+    static readonly minValue = -100;
+    static readonly maxValue = 100;
+    static checkValue(value: number) {
+        if (value < Point.minValue || value > Point.maxValue) {
+            throw `wrong value ${value}, should be in range [${Point.minValue} - ${Point.maxValue}]`
+        }
+    }
+    constructor(private _x: number, private _y: number) {
+        Point.checkValue(_x);
+        Point.checkValue(_y);
+    }
+    get x() {
+        return this._x;
+    }
+    get y() {
+        return this._y;
+    }
+    set x(value: number) {
+        Point.checkValue(value);
+        this._x = value;
+    }
+    set y(value: number) {
+        Point.checkValue(value);
+        this._y = value;
+    }
+    draw(): void {
+        console.log(`Point [x: ${this._x}, y: ${this._y}]`)
+    }
+    
+}
+class Line extends Point {
+    constructor(x: number, y: number, private _point: Point) {
+        super(x, y);
+    }
+    draw() {
+        console.log("-----------Line----------")
+        super.draw();
+        this._point.draw();
+        console.log('-'.repeat(20));
+    }
+    get point() {
+        return this._point;
+    }
+}
+class Square extends Point {
+    constructor(x: number, y: number, private _width: number) {
+        super(x, y);
+    }
+    get width() {
+        return this._width;
+    }
+    draw() {
+        console.log("--------Square-----------");
+        super.draw();
+        console.log(`width: ${this._width}`)
+        console.log("-".repeat(20))
+      
+    }
+}
+class Rectangle extends Square {
+    constructor(x: number, y: number, width: number, private _height: number) {
+        super(x, y, width);
+    }
+    draw() {
+        console.log("==========Rectangle=================")
+        super.draw();
+        console.log(`height: ${this._height}`);
+        console.log("=".repeat(20))
+    }
+}
 
-/*
-hw 32
-1) function intersection(set1: Set<number>, set2: Set<number>): number[]{
-    todo write function returning array of common numbers between 2 sets
-    that is the numbers  existing in both sets 
-    return [];
-}
-2) function sbtract (set1: Set<number>, set2: Set<number>): number[]{
-   todo write function returning array of numbers from set1 that don't exist in set 2 
-    return [];
-}
-3) type Occurrency = {
-    str: string;
-    count: number
-}
-function getSortedOccurrences(array: string[]); Occurrency[] {
-todo  write function returning array of occurrences each occurrency contains string from given array and
-how many times it occurres in the array
-a result array should be sorted in the descending order of the occurrences and ascending order of the string
-example: the given array is ["lmn", "ab", "a", "cd", "lmn", "cd", "lmn"]
-result: [{str: "lmn", count: 3}, {str: "cd", count: 2}, {str: "a", count: 1}, {str: "ab", count: 1}]
-implementation notes: to use Map<string, number>
 
-    return [];
-}
-*/
-//Task1
-const s1 = new Set<number>([1, 2, 3, 4, 5]);
-const s2 = new Set<number>([1, 3, 5, 7]);
-function intersection(set1: Set<number>, set2: Set<number>): number[]{
-    const res = [];
-    set1.forEach(e1=>set2.has(e1)&&res.push(e1));
-return res;
-}
-let task1 = intersection(s1, s2);
-console.log(task1);
 
-//Task2
-function sbtract (set1: Set<number>, set2: Set<number>): number[]{
-    const res = [];
-    set1.forEach(e1=>set2.has(e1)||res.push(e1));
-return res;
+//===========================HW33=========================
+class Canvas implements Shape {
+    private _shapes: Shape[] = []
+    draw(): void {
+        console.log("-----canvas-----")
+        this._shapes.forEach(s=>s.draw());
+    }
+    addShape(shape: Shape): number {
+        this._shapes.push(shape)
+        return this._shapes.indexOf(shape);
+    }
+    removeShape(index: number): Shape {
+        return this._shapes.splice(index, 1)[0];
+    }
+    sort(): void {
+        this._shapes.sort((a, b)=>(a.x-b.x)||(a.y-b.y));
+    }
+    removeIf(predicate: (shape: Shape)=>boolean) {
+        this._shapes.forEach((s,i)=> predicate(s)&&this.removeShape(i))
+    }
+    
 }
-let task2 = sbtract(s1, s2);
-console.log(task2);
+const canvas = new Canvas();
+const add1 = canvas.addShape(new Square(10, 15, 20));
+const add2 = canvas.addShape(new Point(8, 7));
+const add3 = canvas.addShape(new Rectangle(10, 12, 12, 15));
+canvas.addShape(new Line(15,6, new Point(20,2)));
+canvas.addShape(new Line(4,8, new Point(10,2)));
+canvas.addShape(new Line(7,1, new Point(6,6)));
+canvas.addShape(new Line(5,10, new Point(2,5)));
+console.log(add1, add3, add2);
+canvas.sort();
+canvas.draw();
+const remove = canvas.removeShape(1);
+console.log(remove);
+canvas.removeIf((p)=>(p instanceof Line)&&(p.x>p.point.x));
+canvas.draw();
 
-//Task3
-const arr3 = ["lmn", "ab", "a", "cd", "lmn", "cd", "lmn"];
-type Occurrency = {
-    str: string;
-    count: number
-}
-function getSortedOccurrences(array: string[]): Occurrency[]{
-    let resMap = new Map<string, number>();
-    array.forEach(e1=>{let count = 0; array.forEach(e2=> {
-        e1==e2&&resMap.set(e1, ++count)
-    })});
-    const res = [];
-    Array.from(resMap).forEach(r => res.push({str: r[0], count: r[1]}));
-    return _.orderBy(res, ["count", "str"],["desc", "asc"]);
-}
-let task3 = getSortedOccurrences(arr3);
-console.log(task3);
 
 
