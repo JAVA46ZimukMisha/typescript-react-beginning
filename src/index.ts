@@ -110,7 +110,7 @@ canvas.sort();
 canvas.draw();
 const remove = canvas.removeShape(1);
 console.log(remove);
-canvas.removeIf((p)=>(p instanceof Line)&&(p.x>p.point.x));
+canvas.removeIf((p)=>(p.constructor.name=="Line")&&(p.x>p.point.x));
 canvas.draw();
 
 
